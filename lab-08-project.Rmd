@@ -1,0 +1,77 @@
+---
+title: 'put the title of your project here'
+subtitle: "Independent Project Report"
+author: "put your name here"
+date: "Due April 1 2021"
+bibliography: "lab-08.bib" # this line tells RMarkdown which file to use for the bibliography
+fontsize: 12pt
+output: 
+  pdf_document:
+    toc: yes
+    include:
+      in_header: "ees3310.sty" # This line just tells RMarkdown to use a style file to format the PDF file with Times Roman font.
+  github_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+fontsize: 12pt
+output: 
+  word_document:
+    toc: yes
+  pdf_document:
+    includes:
+      in_header: "ees3310.sty"
+    toc: yes
+  html_document:
+    toc: yes
+  github_document:
+    toc: yes
+---
+```{r setup, include=FALSE}
+knitr::knit_hooks$set(inline = function(x) { knitr:::format_sci(x, 'md')})
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, cache = FALSE)
+
+if (knitr::is_latex_output()) {
+  message("Setting PDF plot hook.")
+  new_plot_hook <- function(x, options)
+    paste("\n", knitr::hook_plot_tex(x, options), "\n")
+
+  knitr::knit_hooks$set(plot = new_plot_hook)
+  knitr::opts_chunk$set(fig.width = 5, fig.height = 5)
+} else {
+  message("Not using PDF output.")
+}
+
+
+options(dplyr.summarise.inform = FALSE)
+
+# This section loads necessary R libraries and sources scripts that define
+# useful functions format_md.
+#
+data_dir = "_data"
+script_dir = "_scripts"
+
+if (!dir.exists(data_dir)) dir.create(data_dir)
+
+library(tidyverse)
+library(scales)
+library(knitr)
+library(lubridate)
+
+theme_set(theme_bw(base_size = 15))
+
+source(file.path(script_dir, "utils.R"), chdir = T)
+source(file.path(script_dir, "format_md.R"), chdir = T)
+source(file.path(script_dir, "modtran.R"), chdir = T)
+source(file.path(script_dir, "rrtm.R"), chdir = T)
+source(file.path(script_dir, "geocarb.R"), chdir = T)
+
+# This is the URL for downloading CO2 data from Mauna Loa
+mlo_url = "https://scrippsco2.ucsd.edu/assets/data/atmospheric/stations/in_situ_co2/monthly/monthly_in_situ_co2_mlo.csv"
+
+# This is the URL for downloading global temperature data from NASA's
+# Goddard Institute for Space Studies (GISS).
+giss_url = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv"
+
+```
